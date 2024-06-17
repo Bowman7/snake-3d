@@ -72,11 +72,22 @@ void mouse_callback(GLFWwindow* window,double xpos,double ypos){
 //bools for snake
 
 bool up = false;
-
+bool down = false;
+bool left = false;
+bool right = false;
 //key callback
 void myKeyCallbackFunc(GLFWwindow* window, int key, int scancode, int action, int mods){
   if(key == GLFW_KEY_UP && action == GLFW_PRESS){
     up = true;
+  }
+  if(key == GLFW_KEY_LEFT && action == GLFW_PRESS){
+    left = true;
+  }
+  if(key == GLFW_KEY_RIGHT && action == GLFW_PRESS){
+    right = true;
+  }
+  if(key == GLFW_KEY_DOWN && action == GLFW_PRESS){
+    down = true;
   }
 }
 //input
@@ -103,11 +114,17 @@ int processInput(GLFWwindow *window){
     up = false;
     return 6;
   }
-  if(glfwGetKey(window,GLFW_KEY_LEFT)==GLFW_PRESS){
+  if(left){
+    left = false;
     return 7;
   }
-  if(glfwGetKey(window,GLFW_KEY_RIGHT)==GLFW_PRESS){
+  if(right){
+    right = false;
     return 8;
+  }
+  if(down){
+    down = false;
+    return 9;
   }
   return 5;
 }
@@ -141,6 +158,8 @@ int main(){
   glEnable(GL_DEPTH_TEST);
   //inside window mousr
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  //WIREFRAME MODE
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   
   //MAIN GAME OBJECT
   Game game;

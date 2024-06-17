@@ -3,6 +3,7 @@
 #include<glad/glad.h>
 #include<GLFW/glfw3.h>
 #include<iostream>
+#include<limits>
 
 #include"math.h"
 
@@ -10,16 +11,21 @@
 #include"glm/gtc/matrix_transform.hpp"
 #include"glm/gtc/type_ptr.hpp"
 
-class Grid{
+
+class Python{
 public:
-  Grid();
-  ~Grid();
+  Python();
+  ~Python();
   void SetID(unsigned int id){
-    ID =id;
+    ID = id;
   }
   void Update(glm::mat4);
-  void InitGrid();
   void Draw();
+   void HandleInput(int);
+  void moveAhead();
+  void moveLeft();
+  void moveRight();
+  void moveBack();
   void setMat4(const std::string &name, const glm::mat4 &mat,unsigned int id) const
   {
     glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
@@ -28,11 +34,30 @@ public:
   { 
     glUniform3f(glGetUniformLocation(id, name.c_str()), x, y, z); 
   }
+  float GetPosX(){
+    return p_Pos.x;
+  }
+  float GetPosY(){
+    return p_Pos.y;
+  }
+  float GetPosZ(){
+    return p_Pos.z;
+  }
+  void SetPosX(float x){
+    p_Pos.x = x;
+  }
+  void SetPosY(float y){
+    p_Pos.y = y;
+  }
+  void SetPosZ(float z){
+    p_Pos.z = z;
+  }
+  
 private:
-  glm::vec3 grid[10][10];
   glm::mat4 lookAt;
-  unsigned int VAO,VBO;
+  glm::vec3 p_Pos = glm::vec3(1.0f,1.0f,1.0f);
   unsigned int ID;
+  unsigned int VAO,VBO;
    float vertices[216] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
      0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 

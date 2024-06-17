@@ -30,6 +30,32 @@ public:
   { 
     glUniform3f(glGetUniformLocation(id, name.c_str()), x, y, z); 
   }
+
+  float GetPosX(){
+    return f_Pos.x;
+  }
+  float GetPosY(){
+    return f_Pos.y;
+  }
+  float GetPosZ(){
+    return f_Pos.z;
+  }
+   void SetPosX(float x){
+    f_Pos.x = x;
+  }
+  void SetPosY(float y){
+    f_Pos.y = y;
+  }
+  void SetPosZ(float z){
+    f_Pos.z = z;
+  }
+  void SetPos(glm::vec3 pos){
+    f_Pos = pos;
+  }
+  
+  void printV3(){
+    std::cout<<"v3 x:"<<f_Pos.x<<"y:"<<f_Pos.y<<"z:"<<f_Pos.z<<std::endl;
+  }
 private:
   glm::mat4 lookAt;
   unsigned int ID;

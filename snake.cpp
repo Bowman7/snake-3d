@@ -81,9 +81,7 @@ void Snake::Update(glm::mat4 look){
 void Snake::Draw(){
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //for cube
-  glUseProgram(ID);
-  
-  glm::vec3 objColor = glm::vec3(0.0f,0.5f,0.2f);
+   glm::vec3 objColor = glm::vec3(0.0f,0.5f,0.2f);
   unsigned int objColorLoc = glGetUniformLocation(ID,"ObjectColor");
   glUniform3fv(objColorLoc,1,glm::value_ptr(objColor));
  
@@ -93,6 +91,11 @@ void Snake::Draw(){
   //proj
   glm::mat4 projection =  glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
   glm::mat4 view = lookMat;
+  /*
+  glUseProgram(ID);
+  
+ 
+ 
   setMat4("proj",projection,ID);
   setMat4("view",view,ID);
   setVec3("ViewPos",viewPos.x,viewPos.y,viewPos.z,ID);
@@ -108,7 +111,7 @@ void Snake::Draw(){
        glDrawArrays(GL_TRIANGLES,0,36);
     }
   }
- 
+  */
   
   
   //for light
@@ -158,17 +161,17 @@ bool Snake::EventTriggered(double interval){
 //handle input
 
 void Snake::moveAhead(){
-  glm::vec3 temp = s_Pos;
-  temp += glm::vec3(0.0f,0.0f,1.0f);
-  std::cout<<"temp x:"<<temp.x<<"y:"<<temp.y<<"z:"<<temp.z<<std::endl;
-  s_Pos = temp;
+  s_Pos += glm::vec3(0.0f,0.0f,1.0f);
 }
 void Snake::moveLeft(){
- 
+  s_Pos -= glm::vec3(1.0f,0.0f,0.0f);
 }
 
 void Snake::moveRight(){
- 
+  s_Pos += glm::vec3(1.0f,0.0f,0.0f);
+}
+void Snake::moveBack(){
+  s_Pos -= glm::vec3(0.0f,0.0f,1.0f);
 }
 
 void Snake::HandleInput(int val){
@@ -181,6 +184,8 @@ void Snake::HandleInput(int val){
   case 8:
     moveRight();break;
     break;
+  case 9:
+    moveBack();break;
   default:
     break;
     

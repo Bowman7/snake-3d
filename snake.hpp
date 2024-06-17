@@ -11,7 +11,7 @@
 #include"glm/gtc/matrix_transform.hpp"
 #include"glm/gtc/type_ptr.hpp"
 
-#include"shader.hpp"
+
 
 class Snake{
 public:
@@ -30,6 +30,7 @@ public:
   void moveAhead();
   void moveLeft();
   void moveRight();
+  void moveBack();
   bool EventTriggered(double);
   void setMat4(const std::string &name, const glm::mat4 &mat,unsigned int id) const
   {

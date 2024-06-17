@@ -1,42 +1,76 @@
 #include"game.hpp"
 
 Game::Game(){
-  snakeShader.Init("snake_shader.vert","snake_shader.frag");
-  lightShader.Init("snake_shader.vert","light_shader.frag");
-  s_Shader.Init("s_shader.vert","s_shader.frag");
+  
   fruitShader.Init("f_shader.vert","f_shader.frag");
+  gridShader.Init("grid_shader.vert","grid_shader.frag");
+  pythonShader.Init("p_shader.vert","p_shader.frag");
   
-  snake.SetID(snakeShader.GetID());
-  snake.l_SetID(lightShader.GetID());
-  snake.s_SetID(s_Shader.GetID());
-  
+  python.SetID(pythonShader.GetID());
+  grid.SetID(gridShader.GetID());
   fruit.SetID(fruitShader.GetID());
   //for grid
-  snake.InitGrid();
+  grid.InitGrid();
 }
 
 Game::~Game(){
 
 }
-
+//get random num
+float Game::GetRandNum(){
+  std::random_device dev;
+  std::mt19937 rng(dev());
+  std::uniform_int_distribution<std::mt19937::result_type> dist6(0,9);
+  float random = dist6(rng);
+  return random;
+}
+void Game::GetRandPos(){
+  tempX = GetRandNum();
+  tempZ = GetRandNum();
+  if(python.GetPosX()==tempX && python.GetPosZ() == tempZ){
+    return GetRandPos();
+  }
+}
+//add fruit
+void Game::NewFruitPos(){
+  GetRandPos();
+  glm::vec3 pos = glm::vec3(tempX,1.0f,tempZ);
+  fruit.SetPos(pos);
+  fruit.printV3();
+}
+//check collision
+void Game::CheckCollision(){
+  if(python.GetPosX() == fruit.GetPosX() && python.GetPosZ() == fruit.GetPosZ()){
+    //std::cout<<"Collision!"<<std::endl;
+    NewFruitPos();
+  }
+}
 void Game::HandleInput(int val){
-  snake.HandleInput(val);
+  
+  python.HandleInput(val);
   camera.HandleInput(val);
+
 }
 //update
 void Game::Update(glm::vec3 camFront,float fv){
+  //check collision
+  CheckCollision();
   //handle input
-  camera.UpdateCameraFront(camFront,fv);
-  snake.Update(camera.GetViewMatrix());
-  snake.setView(camera.GetPos());
+  camera.UpdateCameraFront(camFront,fv); 
+
+  python.Update(camera.GetViewMatrix());
   fruit.Update(camera.GetViewMatrix());
- 
+  grid.Update(camera.GetViewMatrix());
+
+  
 }
 
 //draw
 void Game::Draw(){
-  //draw snake
-  snake.Draw();
+  
+  python.Draw();
   fruit.Draw();
+  grid.Draw();
+ 
 }
 
