@@ -79,7 +79,7 @@ void Snake::Update(glm::mat4 look){
  
 }
 void Snake::Draw(){
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   //for cube
   glUseProgram(ID);
   

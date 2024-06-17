@@ -1,0 +1,14 @@
+#include"fruit.hpp"
+
+Fruit::Fruit(){
+  //buffers
+  glGenVertexArrays(1,&VAO);
+  glBindVertexArray(VAO);
+
+  glGenBuffers(1,&VBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,VBO);
+  glBufferData(FL_ELEMENT_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
+  //for acces
+  glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
+  glEnableVertexAttribArray(0);
+}

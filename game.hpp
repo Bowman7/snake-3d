@@ -9,10 +9,11 @@
 #include"glm/gtc/matrix_transform.hpp"
 #include"glm/gtc/type_ptr.hpp"
 
-#include"grid.hpp"
+
 #include"snake.hpp"
 #include"shader.hpp"
 #include"camera.hpp"
+#include"fruit.hpp"
 
 
 class Game{
@@ -28,6 +29,9 @@ private:
   Shader lightShader;
   Shader s_Shader;
   Snake snake;
+
+  Fruit fruit;
+  Shader fruitShader;
   Camera camera;
   
 };

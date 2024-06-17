@@ -4,10 +4,13 @@ Game::Game(){
   snakeShader.Init("snake_shader.vert","snake_shader.frag");
   lightShader.Init("snake_shader.vert","light_shader.frag");
   s_Shader.Init("s_shader.vert","s_shader.frag");
+  fruitShader.Init("f_shader.vert","f_shader.frag");
   
   snake.SetID(snakeShader.GetID());
   snake.l_SetID(lightShader.GetID());
   snake.s_SetID(s_Shader.GetID());
+  
+  fruit.SetID(fruitShader.GetID());
   //for grid
   snake.InitGrid();
 }
@@ -26,11 +29,14 @@ void Game::Update(glm::vec3 camFront,float fv){
   camera.UpdateCameraFront(camFront,fv);
   snake.Update(camera.GetViewMatrix());
   snake.setView(camera.GetPos());
+  fruit.Update(camera.GetViewMatrix());
+ 
 }
 
 //draw
 void Game::Draw(){
   //draw snake
   snake.Draw();
+  fruit.Draw();
 }
 
