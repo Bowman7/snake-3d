@@ -1,2 +1,2 @@
-# snake-3d
-3d Snake using opengl
+# snake
+Arcade Snake 3d remake
