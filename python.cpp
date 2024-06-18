@@ -11,6 +11,10 @@ Python::Python(){
 
   glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
   glEnableVertexAttribArray(0);
+
+  color = glm::vec3(0.0f,0.0f,1.0f);
+  old_direction= 7;
+  direction = 7;
 }
 
 Python::~Python(){
@@ -23,40 +27,63 @@ void Python::Update(glm::mat4 look){
 
 //handle input
 
-void Python::moveAhead(){
+void Python::moveNorth(){//north
   p_Pos -= glm::vec3(0.0f,0.0f,1.0f);
+  if(p_Pos.z <0){
+    p_Pos += glm::vec3(0.0f,0.0f,1.0f);
+    crashed = true;
+  }
 }
-void Python::moveLeft(){
-  p_Pos -= glm::vec3(1.0f,0.0f,0.0f);
-}
-
-void Python::moveRight(){
-  p_Pos += glm::vec3(1.0f,0.0f,0.0f);
-}
-void Python::moveBack(){
+void Python::moveSouth(){//south
   p_Pos += glm::vec3(0.0f,0.0f,1.0f);
+  if(p_Pos.z >=10){
+    p_Pos -= glm::vec3(0.0f,0.0f,1.0f);
+    crashed = true;
+  }
+}
+void Python::moveEast(){//east
+  p_Pos += glm::vec3(1.0f,0.0f,0.0f);
+  
+  if(p_Pos.x >=10){
+    p_Pos -=glm::vec3(1.0f,0.0f,0.0f);
+    crashed = true;
+  }
+}
+void Python::moveWest(){//west
+  p_Pos -= glm::vec3(1.0f,0.0f,0.0f);
+  if(p_Pos.x <0){
+    p_Pos += glm::vec3(1.0f,0.0f,0.0f);
+    crashed = true;
+  }
 }
 
-void Python::HandleInput(int val){
-  switch(val){
-  case 6:
-    moveAhead();
+//move
+void Python::MoveToDir(){
+  Move(direction);
+}
+
+void Python::Move(int dir){
+  switch(dir){
+    case 6:
+    moveNorth();//north :6
     break;
   case 7:
-    moveLeft();break;
+    moveSouth();//south:7
+    break;
   case 8:
-    moveRight();break;
+    moveWest();//west
     break;
   case 9:
-    moveBack();break;
+    moveEast();//east
+    break;
   default:
     break;
-    
-  }
+  }   
 }
 void Python::Draw(){
   glUseProgram(ID);
 
+  setVec3("color",color.x,color.y,color.z,ID);
   glm::mat4 model = glm::mat4(1.0f);
   model = glm::translate(model,p_Pos);
   setMat4("model",model,ID);

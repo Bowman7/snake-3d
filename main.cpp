@@ -114,16 +114,16 @@ int processInput(GLFWwindow *window){
     up = false;
     return 6;
   }
-  if(left){
-    left = false;
-    return 7;
-  }
-  if(right){
-    right = false;
-    return 8;
-  }
   if(down){
     down = false;
+    return 7;
+  }
+  if(left){
+    left = false;//wst
+    return 8;
+  }
+  if(right){
+    right = false;//est
     return 9;
   }
   return 5;

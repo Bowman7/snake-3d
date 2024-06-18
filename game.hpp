@@ -28,11 +28,14 @@ public:
   void NewFruitPos();
   void GetRandPos();
   float GetRandNum();
+  void AddBody();
+  void InitPython();
 private:
   //fruit temp pos
   float tempX,tempZ;
-  Python python;
+  Python python[100];
   Shader pythonShader;
+  int bodyID = 0;
   
   Shader gridShader;
   Grid grid;

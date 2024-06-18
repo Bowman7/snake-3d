@@ -47,6 +47,5 @@ void Camera::HandleInput(int val){
     break;
   }
   look = glm::lookAt(cameraPos,cameraPos+cameraFront,cameraUp);
-  
   cameraPos.y = 4.0f;
 }

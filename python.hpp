@@ -21,11 +21,12 @@ public:
   }
   void Update(glm::mat4);
   void Draw();
-   void HandleInput(int);
-  void moveAhead();
-  void moveLeft();
-  void moveRight();
-  void moveBack();
+  void moveSouth();
+  void moveEast();
+  void moveWest();
+  void moveNorth();
+  void MoveToDir();
+  void Move(int);
   void setMat4(const std::string &name, const glm::mat4 &mat,unsigned int id) const
   {
     glUniformMatrix4fv(glGetUniformLocation(id, name.c_str()), 1, GL_FALSE, &mat[0][0]);
@@ -52,8 +53,38 @@ public:
   void SetPosZ(float z){
     p_Pos.z = z;
   }
-  
+  void SetPos(glm::vec3 pos){
+    p_Pos = pos;
+  }
+  glm::vec3 GetPos(){
+    return p_Pos;
+  }
+
+  int GetOldDir(){
+    return old_direction;
+  }
+  int GetDir(){
+    return direction;
+  }
+  void SetDir(int dir){
+    old_direction = direction;
+    direction = dir;
+  }
+  void SetColor(glm::vec3 col){
+    color = col;
+  }
+  void printV3(){
+    std::cout<<"v3 x:"<<p_Pos.x<<"y:"<<p_Pos.y<<"z:"<<p_Pos.z<<std::endl;
+  }
+  bool IsCrashed(){
+    return crashed;
+  }
+  //directiojn,1-N,2-S,3-E,4-W
 private:
+  bool crashed = false;
+  glm::vec3 color;
+  int old_direction;
+  int direction;
   glm::mat4 lookAt;
   glm::vec3 p_Pos = glm::vec3(1.0f,1.0f,1.0f);
   unsigned int ID;
