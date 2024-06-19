@@ -64,67 +64,112 @@ void Game::NewFruitPos(){
 }
 //add body
 void Game::AddBody(){
-  //FOR EASTSIDE FOOD!!
-  
-  //case 1 from top 
-  if(python[bodyID-1].GetOldDir()==7 && python[0].GetDir()==9){
+   //FOR SOUTH SIDE FOOD!!
+  //case 1(tail->south head->south)
+  if(python[bodyID-1].GetOldDir()==7 && python[0].GetDir()==7){
     python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(0.0f,0.0f,1.0f));
     python[bodyID].SetDir(7);
     bodyID++;
   }
-  //case 2 from bottom
-  if(python[bodyID-1].GetOldDir()==6 && python[0].GetDir()==9){
-    python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(0.0f,0.0f,1.0f));
-    python[bodyID].SetDir(6);
-    bodyID++;
-  }
-  //case 3: from left
-  if(python[bodyID-1].GetOldDir()==9 && python[0].GetDir()==9){
+  //case 2 (tail->east head->south)
+  else if(python[bodyID-1].GetOldDir() == 9 && python[0].GetDir()==7){
     python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(1.0f,0.0f,0.0f));
     python[bodyID].SetDir(9);
     bodyID++;
   }
-  
-  //!!FOR WESTSIDE FOOD!!
-  
-  //case 1 from top
-  if(python[bodyID-1].GetOldDir()==7 && python[0].GetDir()==8){
-    python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(0.0f,0.0f,1.0f));
-    python[bodyID].SetDir(7);
-    bodyID++;
-  }
-  //case 2: from bottom
-  if(python[bodyID-1].GetOldDir()==6 && python[0].GetDir()==8){
+  //case 3 (tail->north head->south)
+  else if(python[bodyID-1].GetOldDir()==6 && python[0].GetDir()==7){
     python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(0.0f,0.0f,1.0f));
     python[bodyID].SetDir(6);
     bodyID++;
   }
-  //case 3: from right
-  if(python[bodyID-1].GetOldDir()==8 && python[0].GetDir()==8){
+  //case 4 (tail->west head->south)
+  else if(python[bodyID-1].GetOldDir() == 8 && python[0].GetDir()==7){
     python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(1.0f,0.0f,0.0f));
     python[bodyID].SetDir(8);
+    bodyID++;
+  }
+  //----------FOR EASTSIDE FOOD!!
+  
+  //case 1: (tail->east head->east)
+  else if(python[bodyID-1].GetOldDir()==9 && python[0].GetDir()==9){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(1.0f,0.0f,0.0f));
+    python[bodyID].SetDir(9);
+    bodyID++;
+  }
+  //case 2:(tail->south head->east)
+  else if(python[bodyID-1].GetOldDir() == 7 && python[0].GetDir() == 9){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(0.0f,0.0f,1.0f));
+    python[bodyID].SetDir(7);
+    bodyID++;
+  }
+  //case 3:(tail->north head->east)
+  else if(python[bodyID-1].GetOldDir() == 6 && python[0].GetDir() == 9){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(0.0f,0.0f,1.0f));
+    python[bodyID].SetDir(6);
+    bodyID++;
+  }
+  //case 4:(tail->west head->east)
+  else if(python[bodyID-1].GetOldDir()==8 && python[0].GetDir() == 9){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(1.0f,0.0f,0.0f));
+    python[bodyID].SetDir(8);
+    bodyID++;
+  }
+  
+  //------------FOR WESTSIDE FOOD!!
+  
+  //case 1:(tail->west head->west)
+  else if(python[bodyID-1].GetOldDir()==8 && python[0].GetDir()==8){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(1.0f,0.0f,0.0f));
+    python[bodyID].SetDir(8);
+    bodyID++;
+  }
+  //case 2:(tail->south head->west)
+  else if(python[bodyID-1].GetOldDir()==7 && python[0].GetDir()==8){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(0.0f,0.0f,1.0f));
+    python[bodyID].SetDir(7);
+    bodyID++;
+  }
+  //case 3:(tail->north head->west)
+  else if(python[bodyID-1].GetOldDir()==6 && python[0].GetDir()==8){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(0.0f,0.0f,1.0f));
+    python[bodyID].SetDir(6);
+    bodyID++;
+  }
+  //case 4:(tail->east head->west)
+  else if(python[bodyID-1].GetOldDir()==9 && python[0].GetDir()==8){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(1.0f,0.0f,0.0f));
+    python[bodyID].SetDir(9);
     bodyID++;
     }
 
-  //FOR SOUTH SIDE FOOD!!
-  //case 1 from left
-  if(python[bodyID-1].GetOldDir() == 9 && python[0].GetDir()==7){
+  //-----------FOR NORTH FOOD!!
+  
+  //case 1:(tail->north head->north)
+  else if(python[bodyID-1].GetOldDir()==6 && python[0].GetDir()==6){
+    python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(0.0f,0.0f,1.0f));
+    python[bodyID].SetDir(6);
+    bodyID++;
+  }
+  //case 2:(tail->east head->north)
+  else if(python[bodyID-1].GetOldDir()==9 && python[0].GetDir()==6){
     python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(1.0f,0.0f,0.0f));
     python[bodyID].SetDir(9);
     bodyID++;
   }
-  //case 2 from right
-  if(python[bodyID-1].GetOldDir() == 8 && python[0].GetDir()==7){
+  //case 3:(tail->west head->north)
+  else if(python[bodyID-1].GetOldDir()==8 && python[0].GetDir()==6){
     python[bodyID].SetPos(python[bodyID-1].GetPos()+=glm::vec3(1.0f,0.0f,0.0f));
     python[bodyID].SetDir(8);
     bodyID++;
   }
-  //from top
-  if(python[bodyID-1].GetOldDir() == 7 && python[0].GetDir()==7){
+  //case 4:(tail->south head->north)
+  else if(python[bodyID-1].GetOldDir()==7 && python[0].GetDir()==6){
     python[bodyID].SetPos(python[bodyID-1].GetPos()-=glm::vec3(0.0f,0.0f,1.0f));
     python[bodyID].SetDir(7);
     bodyID++;
   }
+  
   
 }
 //check collision
