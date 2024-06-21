@@ -30,6 +30,10 @@ public:
   float GetRandNum();
   void AddBody();
   void InitPython();
+  bool n_IsEatingSelf();
+  bool s_IsEatingSelf();
+  bool e_IsEatingSelf();
+  bool w_IsEatingSelf();
 private:
   //fruit temp pos
   float tempX,tempZ;

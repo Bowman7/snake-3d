@@ -180,19 +180,78 @@ void Game::CheckCollision(){
     NewFruitPos();
   }
 }
+//check for self eating in north
+
+bool Game::n_IsEatingSelf(){
+  glm::vec3 temp = python[0].GetPos();
+  temp-=glm::vec3(0.0f,0.0f,1.0f);
+  for(int i=0;i<10;i++){
+    for(int j=0;j<10;j++){
+      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+	return true;
+      }
+    }
+  }
+  return false;
+}
+// in south
+
+bool Game::s_IsEatingSelf(){
+  glm::vec3 temp = python[0].GetPos();
+  temp+=glm::vec3(0.0f,0.0f,1.0f);
+  for(int i=0;i<10;i++){
+    for(int j=0;j<10;j++){
+      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+	return true;
+      }
+    }
+  }
+  return false;
+}
+//in east
+
+bool Game::e_IsEatingSelf(){
+  glm::vec3 temp = python[0].GetPos();
+  temp+=glm::vec3(1.0f,0.0f,-.0f);
+  for(int i=0;i<10;i++){
+    for(int j=0;j<10;j++){
+      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+	return true;
+      }
+    }
+  }
+  return false;
+}
+//in west
+
+bool Game::w_IsEatingSelf(){
+  glm::vec3 temp = python[0].GetPos();
+  temp-=glm::vec3(1.0f,0.0f,0.0f);
+  for(int i=0;i<10;i++){
+    for(int j=0;j<10;j++){
+      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+	return true;
+      }
+    }
+  }
+  return false;
+}
+//handle inputs
 void Game::HandleInput(int val){
 
   //for python
   if(val == 6){//north
     if(python[0].GetPosZ()<=9 && python[0].GetPosZ()>=0){
-      std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
-      if(!python[0].IsCrashed() && python[0].GetDir()!=7){
-	python[0].SetDir(6);
-	python[0].MoveToDir();
-	if(!python[0].IsCrashed()){
-	  for(int i=bodyID-1;i>0;i--){
-	    python[i].MoveToDir();
-	    python[i].SetDir(python[i-1].GetDir());
+      //std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
+      if(!n_IsEatingSelf()){
+	if(!python[0].IsCrashed() && python[0].GetDir()!=7){
+	  python[0].SetDir(6);
+	  python[0].MoveToDir();
+	  if(!python[0].IsCrashed()){
+	    for(int i=bodyID-1;i>0;i--){
+	      python[i].MoveToDir();
+	      python[i].SetDir(python[i-1].GetDir());
+	    }
 	  }
 	}
       }
@@ -200,14 +259,16 @@ void Game::HandleInput(int val){
   }
   else if(val == 7){//south
     if(python[0].GetPosZ()<=9 && python[0].GetPosZ()>=0){
-      std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
-      if(!python[0].IsCrashed() && python[0].GetDir()!=6){
-	python[0].SetDir(7);
-	python[0].MoveToDir();
-	if(!python[0].IsCrashed()){
-	  for(int i=bodyID-1;i>0;i--){
-	    python[i].MoveToDir();
-	    python[i].SetDir(python[i-1].GetDir());
+      //std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
+      if(!s_IsEatingSelf()){
+	if(!python[0].IsCrashed() && python[0].GetDir()!=6){
+	  python[0].SetDir(7);
+	  python[0].MoveToDir();
+	  if(!python[0].IsCrashed()){
+	    for(int i=bodyID-1;i>0;i--){
+	      python[i].MoveToDir();
+	      python[i].SetDir(python[i-1].GetDir());
+	    }
 	  }
 	}
       }
@@ -215,14 +276,16 @@ void Game::HandleInput(int val){
   }
   else if(val == 8){//west
     if(python[0].GetPosX()<=9 && python[0].GetPosX()>=0){
-      std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
-      if(!python[0].IsCrashed() && python[0].GetDir()!=9){
-	python[0].SetDir(8);
-	python[0].MoveToDir();
-	if(!python[0].IsCrashed()){
-	  for(int i=bodyID-1;i>0;i--){
-	    python[i].MoveToDir();
-	    python[i].SetDir(python[i-1].GetDir());
+      //std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
+      if(!w_IsEatingSelf()){
+	if(!python[0].IsCrashed() && python[0].GetDir()!=9){
+	  python[0].SetDir(8);
+	  python[0].MoveToDir();
+	  if(!python[0].IsCrashed()){
+	    for(int i=bodyID-1;i>0;i--){
+	      python[i].MoveToDir();
+	      python[i].SetDir(python[i-1].GetDir());
+	    }
 	  }
 	}
       }
@@ -230,14 +293,16 @@ void Game::HandleInput(int val){
   }
   else if(val == 9){//east
     if(python[0].GetPosX()<=9 && python[0].GetPosX()>=0){
-      std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
-      if(!python[0].IsCrashed() && python[0].GetDir()!=8){
-	python[0].SetDir(9);
-	python[0].MoveToDir();
-	if(!python[0].IsCrashed()){
-	  for(int i=bodyID-1;i>0;i--){
-	    python[i].MoveToDir();
-	    python[i].SetDir(python[i-1].GetDir());
+      //std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
+      if(!e_IsEatingSelf()){
+	if(!python[0].IsCrashed() && python[0].GetDir()!=8){
+	  python[0].SetDir(9);
+	  python[0].MoveToDir();
+	  if(!python[0].IsCrashed()){
+	    for(int i=bodyID-1;i>0;i--){
+	      python[i].MoveToDir();
+	      python[i].SetDir(python[i-1].GetDir());
+	    }
 	  }
 	}
       }
