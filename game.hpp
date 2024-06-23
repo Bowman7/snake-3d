@@ -16,6 +16,8 @@
 #include"fruit.hpp"
 #include"grid.hpp"
 #include"python.hpp"
+//test texture
+#include"tx_test.hpp"
 
 class Game{
 public:
@@ -34,6 +36,7 @@ public:
   bool s_IsEatingSelf();
   bool e_IsEatingSelf();
   bool w_IsEatingSelf();
+  void InitTexture();
 private:
   //fruit temp pos
   float tempX,tempZ;
@@ -48,5 +51,12 @@ private:
   Shader fruitShader;
   
   Camera camera;
+  //for testing texture
+  Tex tex[2];
+  Shader texShader;
+  //for texture
+  unsigned int g_texture;
+  int height,width,nrChannels;
+  unsigned char* data;
   
 };

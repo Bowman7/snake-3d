@@ -1,8 +1,5 @@
 #include"python.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include"stb_image.h"
-
 Python::Python(){
   //buffers
   glGenVertexArrays(1,&VAO);
@@ -12,30 +9,13 @@ Python::Python(){
   glBindBuffer(GL_ARRAY_BUFFER,VBO);
   glBufferData(GL_ARRAY_BUFFER,sizeof(vertices),vertices,GL_STATIC_DRAW);
 
+  //for pos
   glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)0);
   glEnableVertexAttribArray(0);
-  //for tex
-  glVertexAttribPointer(1,2,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)(6*sizeof(float)));
-  glEnableVertexAttribArray(1);
-
-  //texture
-  glGenTextures(1,&texture);
-  glBindTexture(GL_TEXTURE_2D,texture);
+  //for tex coord
+  glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,8*sizeof(float),(void*)(6*sizeof(float)));
+  glEnableVertexAttribArray(2);
   
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  data = stbi_load("Graphics/snake.jpg", &width, &height, &nrChannels, 0);
-  if(data){
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-  }else{
-    std::cout << "Failed to load texture" << std::endl;
-  }
-  stbi_image_free(data);
-
-
   
   color = glm::vec3(0.0f,0.0f,1.0f);
   old_direction= 7;
@@ -119,6 +99,7 @@ void Python::Draw(){
   glm::mat4 view = lookAt;
   setMat4("proj",projection,ID);
   setMat4("view",view,ID);
+
 
   glBindTexture(GL_TEXTURE_2D,texture);
   glBindVertexArray(VAO);

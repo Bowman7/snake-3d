@@ -1,31 +1,68 @@
 #include"game.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 Game::Game(){
+  //init texture
+  InitTexture();
+  tex[0].SetTexture(g_texture);
+  tex[1].SetTexture(g_texture);
   
   fruitShader.Init("f_shader.vert","f_shader.frag");
   gridShader.Init("grid_shader.vert","grid_shader.frag");
   pythonShader.Init("p_shader.vert","p_shader.frag");
+  texShader.Init("tx.vert","tex.frag");
 
   InitPython();
   python[0].SetID(pythonShader.GetID());
   python[0].SetPos(glm::vec3(1.0f,1.0f,2.0f));
   python[0].SetColor(glm::vec3(1.0f,0.75f,0.80f));
   python[0].SetDir(7);
+ 
   bodyID++;
   python[bodyID].SetID(pythonShader.GetID());
   python[bodyID].SetPos(glm::vec3(1.0f,1.0f,1.0f));
   python[bodyID].SetDir(7);
+ 
   bodyID++;
   python[bodyID].SetID(pythonShader.GetID());
   python[bodyID].SetPos(glm::vec3(1.0f,1.0f,0.0f));
   python[bodyID].SetDir(7);
+ 
   bodyID++;
+  
   grid.SetID(gridShader.GetID());
   fruit.SetID(fruitShader.GetID());
+
+  //for texture testing
+  tex[0].SetID(texShader.GetID());
+  tex[1].SetID(texShader.GetID());
+  tex[1].SetPos(glm::vec3(7.0f,1.0f,2.0f));
   //for grid
   grid.InitGrid();
 }
+//init tex
+void Game::InitTexture(){
+  glGenTextures(1,&g_texture);
+  glBindTexture(GL_TEXTURE_2D,g_texture);
 
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  data = stbi_load("Graphics/snake.jpg",&width,&height,&nrChannels,0);
+  
+  if(data){
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }else{
+    std::cout<<"Could not load texture"<<std::endl;
+  }
+  stbi_image_free(data);
+
+  
+}
 Game::~Game(){
 
 }
@@ -36,6 +73,7 @@ void Game::InitPython(){
     python[i].SetPos(glm::vec3(0.0f,1.0f,0.0f));
     python[i].SetColor(glm::vec3(0.0f,0.0f,1.0f));
     python[i].SetDir(7);
+    python[i].SetTexture(g_texture);
   }
 }
 //get random num
@@ -324,6 +362,9 @@ void Game::Update(glm::vec3 camFront,float fv){
   fruit.Update(camera.GetViewMatrix());
   grid.Update(camera.GetViewMatrix());
 
+  tex[0].Update(camera.GetViewMatrix());
+  tex[1].Update(camera.GetViewMatrix());
+
   
 }
 
@@ -335,6 +376,7 @@ void Game::Draw(){
   }
   fruit.Draw();
   grid.Draw();
+  
  
 }
 
