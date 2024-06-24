@@ -56,11 +56,18 @@ public:
   void printV3(){
     std::cout<<"v3 x:"<<f_Pos.x<<"y:"<<f_Pos.y<<"z:"<<f_Pos.z<<std::endl;
   }
+  void SetCameraPos(glm::vec3 pos){
+    camPos = pos;
+  }
 private:
+  glm::vec3 camPos = glm::vec3(0.0f,0.0f,0.0f);
+  glm::vec3 color = glm::vec3(1.0f,0.0f,0.0f);
+  glm::vec3 lColor = glm::vec3(1.0f,1.0f,1.0f);
+  glm::vec3 lPos = glm::vec3(5.0f,2.0f,5.0f);
   glm::mat4 lookAt;
   unsigned int ID;
   unsigned int VAO,VBO;
-  glm::vec3 f_Pos = glm::vec3(3.0f,1.0f,2.0f);
+  glm::vec3 f_Pos = glm::vec3(4.0f,1.0f,5.0f);
    float vertices[216] = {
     -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
      0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 

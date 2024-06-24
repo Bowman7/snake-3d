@@ -159,7 +159,7 @@ int main(){
   //inside window mousr
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   //WIREFRAME MODE
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   
   //MAIN GAME OBJECT
   Game game;

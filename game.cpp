@@ -6,18 +6,16 @@
 Game::Game(){
   //init texture
   InitTexture();
-  tex[0].SetTexture(g_texture);
-  tex[1].SetTexture(g_texture);
-  
   fruitShader.Init("f_shader.vert","f_shader.frag");
   gridShader.Init("grid_shader.vert","grid_shader.frag");
   pythonShader.Init("p_shader.vert","p_shader.frag");
   texShader.Init("tx.vert","tex.frag");
-
-  InitPython();
+  lightShader.Init("light.vert","light.frag");
+  
+  InitPython(lightShader.GetID());
   python[0].SetID(pythonShader.GetID());
   python[0].SetPos(glm::vec3(1.0f,1.0f,2.0f));
-  python[0].SetColor(glm::vec3(1.0f,0.75f,0.80f));
+  //python[0].SetColor(glm::vec3(1.0f,0.75f,0.80f));
   python[0].SetDir(7);
  
   bodyID++;
@@ -31,19 +29,16 @@ Game::Game(){
   python[bodyID].SetDir(7);
  
   bodyID++;
-  
+
+  grid.SetTexture(grass_texture);
   grid.SetID(gridShader.GetID());
   fruit.SetID(fruitShader.GetID());
-
-  //for texture testing
-  tex[0].SetID(texShader.GetID());
-  tex[1].SetID(texShader.GetID());
-  tex[1].SetPos(glm::vec3(7.0f,1.0f,2.0f));
   //for grid
   grid.InitGrid();
 }
 //init tex
 void Game::InitTexture(){
+  //skin texture
   glGenTextures(1,&g_texture);
   glBindTexture(GL_TEXTURE_2D,g_texture);
 
@@ -51,7 +46,7 @@ void Game::InitTexture(){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  data = stbi_load("Graphics/snake.jpg",&width,&height,&nrChannels,0);
+  data = stbi_load("Graphics/skin2.jpg",&width,&height,&nrChannels,0);
   
   if(data){
     glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
@@ -60,20 +55,39 @@ void Game::InitTexture(){
     std::cout<<"Could not load texture"<<std::endl;
   }
   stbi_image_free(data);
+  
+  //grass texture
+  glGenTextures(1,&grass_texture);
+  glBindTexture(GL_TEXTURE_2D,grass_texture);
 
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  data = stbi_load("Graphics/grass3.png",&width,&height,&nrChannels,0);
+  
+  if(data){
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }else{
+    std::cout<<"Could not load texture"<<std::endl;
+  }
+  stbi_image_free(data);
+  
   
 }
 Game::~Game(){
 
 }
 //init python
-void Game::InitPython(){
+void Game::InitPython(unsigned int l_id){
   for(int i=0;i<100;i++){
     python[i].SetID(pythonShader.GetID());
     python[i].SetPos(glm::vec3(0.0f,1.0f,0.0f));
-    python[i].SetColor(glm::vec3(0.0f,0.0f,1.0f));
+    python[i].SetColor(glm::vec3(0.13f,0.54f,0.13f));
     python[i].SetDir(7);
     python[i].SetTexture(g_texture);
+    python[i].SetLightID(l_id);
   }
 }
 //get random num
@@ -223,11 +237,9 @@ void Game::CheckCollision(){
 bool Game::n_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp-=glm::vec3(0.0f,0.0f,1.0f);
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
-      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
-	return true;
-      }
+  for(int i=1;i<100;i++){
+    if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      return true;
     }
   }
   return false;
@@ -237,11 +249,9 @@ bool Game::n_IsEatingSelf(){
 bool Game::s_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp+=glm::vec3(0.0f,0.0f,1.0f);
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
-      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
-	return true;
-      }
+  for(int i=1;i<100;i++){
+    if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      return true;
     }
   }
   return false;
@@ -251,11 +261,9 @@ bool Game::s_IsEatingSelf(){
 bool Game::e_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp+=glm::vec3(1.0f,0.0f,-.0f);
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
-      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
-	return true;
-      }
+  for(int i=1;i<100;i++){
+    if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      return true;
     }
   }
   return false;
@@ -265,11 +273,9 @@ bool Game::e_IsEatingSelf(){
 bool Game::w_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp-=glm::vec3(1.0f,0.0f,0.0f);
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
-      if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
-	return true;
-      }
+  for(int i=1;i<100;i++){
+    if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      return true;
     }
   }
   return false;
@@ -358,12 +364,14 @@ void Game::Update(glm::vec3 camFront,float fv){
 
   for(int i=0;i<bodyID;i++){
     python[i].Update(camera.GetViewMatrix());
+    python[i].SetCameraPos(camera.GetPos());
   }
   fruit.Update(camera.GetViewMatrix());
+  fruit.SetCameraPos(camera.GetPos());
+  
   grid.Update(camera.GetViewMatrix());
+  grid.SetCamPos(camera.GetPos());
 
-  tex[0].Update(camera.GetViewMatrix());
-  tex[1].Update(camera.GetViewMatrix());
 
   
 }

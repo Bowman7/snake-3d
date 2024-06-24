@@ -84,19 +84,29 @@ public:
   void SetTexture(unsigned int tex){
     texture = tex;
   }
-  
+  //set light id
+  void SetLightID(unsigned int id){
+    l_ID = id;
+  }
+  void SetCameraPos(glm::vec3 pos){
+    camPos = pos;
+  }
   //directiojn,1-N,2-S,3-E,4-W
 private:
   //texture
   unsigned int texture;
   bool crashed = false;
   glm::vec3 color;
+  glm::vec3 lcolor= glm::vec3(1.0f,1.0f,1.0f);
   int old_direction;
   int direction;
   glm::mat4 lookAt;
   glm::vec3 p_Pos = glm::vec3(1.0f,1.0f,1.0f);
-  unsigned int ID;
-  unsigned int VAO,VBO;
+  glm::vec3 camPos;
+  
+  unsigned int ID,l_ID;
+  unsigned int VAO,VBO,l_VAO;
+  glm::vec3 l_pos = glm::vec3(5.0f,2.0f,5.0f);
  
   float vertices[288] = {
     //vertices                  //normals      //tex coord

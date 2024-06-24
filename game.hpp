@@ -31,7 +31,7 @@ public:
   void GetRandPos();
   float GetRandNum();
   void AddBody();
-  void InitPython();
+  void InitPython(unsigned int );
   bool n_IsEatingSelf();
   bool s_IsEatingSelf();
   bool e_IsEatingSelf();
@@ -56,7 +56,10 @@ private:
   Shader texShader;
   //for texture
   unsigned int g_texture;
+  unsigned int grass_texture;
   int height,width,nrChannels;
   unsigned char* data;
+  //for light
+  Shader lightShader;
   
 };
