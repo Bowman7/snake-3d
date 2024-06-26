@@ -1,0 +1,9 @@
+#include"screen.hpp"
+
+screen::screen(){
+  glGenVertexArrays(1,&VAO);
+  glBindVertexArray(VAO);
+
+  glGenBuffers(1,&VBO);
+  glBindBuffer
+}

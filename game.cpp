@@ -11,6 +11,8 @@ Game::Game(){
   pythonShader.Init("p_shader.vert","p_shader.frag");
   texShader.Init("tx.vert","tex.frag");
   lightShader.Init("light.vert","light.frag");
+  loadingShader.Init("screen.vert","screen.frag");
+  endLoadingShader.Init("screen.vert","screen.frag");
   
   InitPython(lightShader.GetID());
   python[0].SetID(pythonShader.GetID());
@@ -32,9 +34,38 @@ Game::Game(){
 
   grid.SetTexture(grass_texture);
   grid.SetID(gridShader.GetID());
+  
   fruit.SetID(fruitShader.GetID());
+  //laoding screen
+  loading.SetTexture(l_texture);
+  loading.SetID(loadingShader.GetID());
+  //gameover screen
+  endLoading.SetTexture(el_texture);
+  endLoading.SetID(endLoadingShader.GetID());
   //for grid
   grid.InitGrid();
+}
+//reset game
+void Game::Reset(){
+  gameOver = false;
+  bodyID = 0;
+  InitPython(lightShader.GetID());
+  python[0].SetID(pythonShader.GetID());
+  python[0].SetPos(glm::vec3(1.0f,1.0f,2.0f));
+  //python[0].SetColor(glm::vec3(1.0f,0.75f,0.80f));
+  python[0].SetDir(7);
+ 
+  bodyID++;
+  python[bodyID].SetID(pythonShader.GetID());
+  python[bodyID].SetPos(glm::vec3(1.0f,1.0f,1.0f));
+  python[bodyID].SetDir(7);
+ 
+  bodyID++;
+  python[bodyID].SetID(pythonShader.GetID());
+  python[bodyID].SetPos(glm::vec3(1.0f,1.0f,0.0f));
+  python[bodyID].SetDir(7);
+ 
+  bodyID++;
 }
 //init tex
 void Game::InitTexture(){
@@ -73,6 +104,42 @@ void Game::InitTexture(){
     std::cout<<"Could not load texture"<<std::endl;
   }
   stbi_image_free(data);
+  //loading screen texture
+  //texture
+  glGenTextures(1,&l_texture);
+  glBindTexture(GL_TEXTURE_2D,l_texture);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  stbi_set_flip_vertically_on_load(true);  
+  data = stbi_load("Graphics/background0.png",&width,&height,&nrChannels,0);
+  if(data){
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }else{
+     std::cout<<"Could not load texture"<<std::endl;
+  }
+  stbi_image_free(data);
+
+  //game over texure
+  glGenTextures(1,&el_texture);
+  glBindTexture(GL_TEXTURE_2D,el_texture);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  stbi_set_flip_vertically_on_load(true);  
+  data = stbi_load("Graphics/background-1.png",&width,&height,&nrChannels,0);
+  if(data){
+    glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+  }else{
+     std::cout<<"Could not load texture"<<std::endl;
+  }
+  stbi_image_free(data);
   
   
 }
@@ -88,6 +155,7 @@ void Game::InitPython(unsigned int l_id){
     python[i].SetDir(7);
     python[i].SetTexture(g_texture);
     python[i].SetLightID(l_id);
+    python[i].ResetCrashed();
   }
 }
 //get random num
@@ -237,8 +305,9 @@ void Game::CheckCollision(){
 bool Game::n_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp-=glm::vec3(0.0f,0.0f,1.0f);
-  for(int i=1;i<100;i++){
+  for(int i=2;i<bodyID;i++){
     if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      gameOver = true;
       return true;
     }
   }
@@ -249,8 +318,9 @@ bool Game::n_IsEatingSelf(){
 bool Game::s_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp+=glm::vec3(0.0f,0.0f,1.0f);
-  for(int i=1;i<100;i++){
+  for(int i=2;i<bodyID;i++){
     if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      gameOver = true;
       return true;
     }
   }
@@ -261,8 +331,9 @@ bool Game::s_IsEatingSelf(){
 bool Game::e_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp+=glm::vec3(1.0f,0.0f,-.0f);
-  for(int i=1;i<100;i++){
+  for(int i=2;i<bodyID;i++){
     if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      gameOver = true;
       return true;
     }
   }
@@ -273,8 +344,9 @@ bool Game::e_IsEatingSelf(){
 bool Game::w_IsEatingSelf(){
   glm::vec3 temp = python[0].GetPos();
   temp-=glm::vec3(1.0f,0.0f,0.0f);
-  for(int i=1;i<100;i++){
+  for(int i=2;i<bodyID;i++){
     if(temp.x == python[i].GetPosX() && temp.z == python[i].GetPosZ()){
+      gameOver = true;
       return true;
     }
   }
@@ -282,8 +354,10 @@ bool Game::w_IsEatingSelf(){
 }
 //handle inputs
 void Game::HandleInput(int val){
-
   //for python
+  if(python[0].IsCrashed()){
+    gameOver = true;
+  }
   if(val == 6){//north
     if(python[0].GetPosZ()<=9 && python[0].GetPosZ()>=0){
       //std::cout<<"dir of last : "<<python[bodyID-1].GetDir()<<std::endl;
@@ -378,13 +452,18 @@ void Game::Update(glm::vec3 camFront,float fv){
 
 //draw
 void Game::Draw(){
-
   for(int i=0;i<bodyID;i++){
     python[i].Draw();
   }
   fruit.Draw();
-  grid.Draw();
-  
- 
+  grid.Draw(); 
+}
+//draw loading
+void Game::DrawLoading(){
+  loading.Draw();
+}
+//draw gameover
+void Game::DrawGameOver(){
+  endLoading.Draw();
 }
 

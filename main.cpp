@@ -13,6 +13,13 @@
 #define HEIGHT 1080
 
 
+//enum
+enum GAMESTATE{
+  LOADING =0,
+  GAME,
+  GAMEOVER
+};
+GAMESTATE state ;
 //yaw and vec3 var frontpos
 bool firstMouse = true;
 float yaw = -90.0f;
@@ -89,6 +96,14 @@ void myKeyCallbackFunc(GLFWwindow* window, int key, int scancode, int action, in
   if(key == GLFW_KEY_DOWN && action == GLFW_PRESS){
     down = true;
   }
+  if(key == GLFW_KEY_ENTER && action == GLFW_PRESS){
+    if(state == LOADING){
+      state = GAME;
+    }
+    if(state == GAMEOVER){
+      state = LOADING;
+    }
+  }
 }
 //input
 
@@ -127,6 +142,7 @@ int processInput(GLFWwindow *window){
     return 9;
   }
   return 5;
+  
 }
 
 int main(){
@@ -159,33 +175,53 @@ int main(){
   //inside window mousr
   glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
   //WIREFRAME MODE
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   
   //MAIN GAME OBJECT
   Game game;
-  
- 
+  //state = GAME;
   //MAIN LOOP
   while(!glfwWindowShouldClose(window)){
-
     //handle input
     game.HandleInput(processInput(window));
     //update
     game.Update(cameraFront,fov);
     
-    //render
-    glClearColor(0.f,0.5f,0.5f,1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    game.Draw();
-    
-      
+    switch(state){
+    case LOADING:
+      {
+	glClearColor(0.0f,0.5f,0.5f,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	game.DrawLoading();
+      }
+      break;
+    case GAME:
+      {
+	if(game.CheckGameOver()){
+	  state = GAMEOVER;
+	  game.Reset();
+	}else{
+	  //render
+	  glClearColor(0.0f,0.5f,0.5f,1.0f);
+	  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	  
+	  game.Draw();
+	}
+	
+      }break;
+    case GAMEOVER:
+      {
+	glClearColor(0.0f,0.5f,0.5f,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	game.DrawGameOver();
+      }
+      break;
+    }
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
-
-
   glfwTerminate();
   return 0;
-  
 }

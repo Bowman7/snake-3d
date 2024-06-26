@@ -80,6 +80,9 @@ public:
   bool IsCrashed(){
     return crashed;
   }
+  void ResetCrashed(){
+    crashed = false;
+  }
   
   void SetTexture(unsigned int tex){
     texture = tex;
@@ -106,7 +109,7 @@ private:
   
   unsigned int ID,l_ID;
   unsigned int VAO,VBO,l_VAO;
-  glm::vec3 l_pos = glm::vec3(5.0f,2.0f,5.0f);
+  glm::vec3 l_pos = glm::vec3(5.0f,4.0f,5.0f);
  
   float vertices[288] = {
     //vertices                  //normals      //tex coord

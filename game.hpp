@@ -16,6 +16,8 @@
 #include"fruit.hpp"
 #include"grid.hpp"
 #include"python.hpp"
+#include"screen.hpp"
+
 //test texture
 #include"tx_test.hpp"
 
@@ -25,6 +27,8 @@ public:
   ~Game();
   void Update(glm::vec3,float);
   void Draw();
+  void DrawLoading();
+  void DrawGameOver();
   void HandleInput(int);
   void CheckCollision();
   void NewFruitPos();
@@ -37,7 +41,13 @@ public:
   bool e_IsEatingSelf();
   bool w_IsEatingSelf();
   void InitTexture();
+  bool CheckGameOver(){
+    return gameOver;
+  }
+  void Reset();
 private:
+  //gameover flag
+  bool gameOver = false;
   //fruit temp pos
   float tempX,tempZ;
   Python python[100];
@@ -61,5 +71,13 @@ private:
   unsigned char* data;
   //for light
   Shader lightShader;
+  //for loading screen
+  screen loading;
+  Shader loadingShader;
+  unsigned int l_texture;
+  //for end loading screen
+  screen endLoading;
+  Shader endLoadingShader;
+  unsigned int el_texture;
   
 };

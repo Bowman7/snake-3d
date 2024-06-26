@@ -1,0 +1,11 @@
+#pragma once
+
+
+class screen{
+public:
+  screen();
+  ~screen();
+  void Draw();
+private:
+  unsigned int VBO,VAO,texture;
+};

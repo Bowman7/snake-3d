@@ -122,7 +122,7 @@ void Python::Draw(){
 
   glm::mat4 l_model = glm::mat4(1.0f);
   l_model = glm::translate(l_model,l_pos);
-  l_model = glm::scale(l_model,glm::vec3(0.2f,0.2f,0.2f));
+  l_model = glm::scale(l_model,glm::vec3(0.1f,0.1f,0.1f));
 
   setMat4("model",l_model,l_ID);
   setMat4("proj",projection,l_ID);
