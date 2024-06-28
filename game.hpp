@@ -10,6 +10,12 @@
 #include"glm/gtc/matrix_transform.hpp"
 #include"glm/gtc/type_ptr.hpp"
 
+//for fruit bite
+#include<irrklang/irrKlang.h>
+using namespace irrklang;
+//#pragma comment(lib,"lib/*")
+
+
 
 #include"shader.hpp"
 #include"camera.hpp"
@@ -17,6 +23,9 @@
 #include"grid.hpp"
 #include"python.hpp"
 #include"screen.hpp"
+//for text
+#include"text.hpp"
+
 
 //test texture
 #include"tx_test.hpp"
@@ -45,7 +54,19 @@ public:
     return gameOver;
   }
   void Reset();
+  bool EventTriggered(double);
+  void PlayBite(){
+    soundEngine->play2D(bite,false);
+    //soundEngine->stopAllSounds();
+  }
 private:
+  //fruit eating sound
+  ISoundEngine *soundEngine = createIrrKlangDevice();
+  const char* bite="Music/bite2.mp3";
+  
+  //for timestep
+  double speed = 1.0;
+  double lastUpdatedTime =0.0;
   //gameover flag
   bool gameOver = false;
   //fruit temp pos
@@ -79,5 +100,8 @@ private:
   screen endLoading;
   Shader endLoadingShader;
   unsigned int el_texture;
+  //for text loading
+  Shader textShader;
+  Text text;
   
 };

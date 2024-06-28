@@ -13,6 +13,8 @@ Game::Game(){
   lightShader.Init("light.vert","light.frag");
   loadingShader.Init("screen.vert","screen.frag");
   endLoadingShader.Init("screen.vert","screen.frag");
+  //for text
+  textShader.Init("text.vert","text.frag");
   
   InitPython(lightShader.GetID());
   python[0].SetID(pythonShader.GetID());
@@ -44,6 +46,12 @@ Game::Game(){
   endLoading.SetID(endLoadingShader.GetID());
   //for grid
   grid.InitGrid();
+  //for text
+  text.SetID(textShader.GetID());
+
+}
+Game::~Game(){
+  
 }
 //reset game
 void Game::Reset(){
@@ -143,9 +151,7 @@ void Game::InitTexture(){
   
   
 }
-Game::~Game(){
 
-}
 //init python
 void Game::InitPython(unsigned int l_id){
   for(int i=0;i<100;i++){
@@ -296,8 +302,10 @@ void Game::AddBody(){
 void Game::CheckCollision(){
   if(python[0].GetPosX() == fruit.GetPosX() && python[0].GetPosZ() == fruit.GetPosZ()){
     //std::cout<<"Collision!"<<std::endl;
+    PlayBite();
     AddBody();
     NewFruitPos();
+    speed += 0.01;
   }
 }
 //check for self eating in north
@@ -429,8 +437,66 @@ void Game::HandleInput(int val){
   camera.HandleInput(val);
 
 }
+//time step
+bool Game::EventTriggered(double Time){
+  double currentTime = glfwGetTime();
+  if(currentTime - lastUpdatedTime >= Time){
+    lastUpdatedTime = currentTime;
+    return true;
+  }
+  return false;
+}
 //update
 void Game::Update(glm::vec3 camFront,float fv){
+  if(EventTriggered(speed)){
+    if(python[0].IsCrashed()){
+      gameOver = true;
+    }
+    //north
+    if(python[0].GetDir() == 6){
+      if(!n_IsEatingSelf()){
+	python[0].SetDir(6);
+	python[0].MoveToDir();
+	for(int i =bodyID-1;i>0;i--){
+	  python[i].MoveToDir();
+	  python[i].SetDir(python[i-1].GetDir());
+	}
+      }
+    }
+    //south
+    else if(python[0].GetDir()==7){
+      if(!s_IsEatingSelf()){
+	python[0].SetDir(7);
+	python[0].MoveToDir();
+	for(int i =bodyID-1;i>0;i--){
+	  python[i].MoveToDir();
+	  python[i].SetDir(python[i-1].GetDir());
+	}
+      }
+    }
+    //west
+    else if(python[0].GetDir() == 8){
+      if(!w_IsEatingSelf()){
+	python[0].SetDir(8);
+	python[0].MoveToDir();
+	for(int i =bodyID-1;i>0;i--){
+	  python[i].MoveToDir();
+	  python[i].SetDir(python[i-1].GetDir());
+	}
+      }
+    }
+    //east
+    else if(python[0].GetDir() == 9){
+      if(!e_IsEatingSelf()){
+	python[0].SetDir(9);
+	python[0].MoveToDir();
+	for(int i =bodyID-1;i>0;i--){
+	  python[i].MoveToDir();
+	  python[i].SetDir(python[i-1].GetDir());
+	}
+      }
+    }
+  }
   //check collision
   CheckCollision();
   //handle input
@@ -452,11 +518,15 @@ void Game::Update(glm::vec3 camFront,float fv){
 
 //draw
 void Game::Draw(){
+  //draw text
+ 
   for(int i=0;i<bodyID;i++){
     python[i].Draw();
   }
   fruit.Draw();
-  grid.Draw(); 
+  grid.Draw();
+  text.RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+  text.RenderText("(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
 }
 //draw loading
 void Game::DrawLoading(){

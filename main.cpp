@@ -8,6 +8,7 @@
 #include"glm/gtc/type_ptr.hpp"
 
 #include"game.hpp"
+#include"music.cpp"
 
 #define WIDTH 1920
 #define HEIGHT 1080
@@ -144,6 +145,7 @@ int processInput(GLFWwindow *window){
   return 5;
   
 }
+//play music
 
 int main(){
   //init glfw and version
@@ -170,6 +172,9 @@ int main(){
     std::cout<<"Failed to initialize GLAD"<<std::endl;
     
   }
+  //enable blending mode for text
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
   //enable depth test
   glEnable(GL_DEPTH_TEST);
   //inside window mousr
@@ -179,9 +184,14 @@ int main(){
   
   //MAIN GAME OBJECT
   Game game;
-  //state = GAME;
+
+  Music music;
+  bool loading = true;
+  bool m_game = false;
+  bool m_gameover = false;
   //MAIN LOOP
   while(!glfwWindowShouldClose(window)){
+   
     //handle input
     game.HandleInput(processInput(window));
     //update
@@ -190,6 +200,12 @@ int main(){
     switch(state){
     case LOADING:
       {
+	if(loading){
+	  music.Stop();
+	  music.Play();
+	  loading = false;
+	  m_game = true;
+	}
 	glClearColor(0.0f,0.5f,0.5f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -198,6 +214,14 @@ int main(){
       break;
     case GAME:
       {
+	if(m_game){
+	  music.Stop();
+	  music.PlayGame();
+	  m_game= false;
+	  m_gameover = true;
+	  
+	}
+	
 	if(game.CheckGameOver()){
 	  state = GAMEOVER;
 	  game.Reset();
@@ -212,6 +236,12 @@ int main(){
       }break;
     case GAMEOVER:
       {
+	if(m_gameover){
+	  music.Stop();
+	  music.PlayOver();
+	  m_gameover =false;
+	  loading = true;
+	}
 	glClearColor(0.0f,0.5f,0.5f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -222,6 +252,7 @@ int main(){
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
+ 
   glfwTerminate();
   return 0;
 }
