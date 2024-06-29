@@ -1,5 +1,0 @@
-//sound
-#include<irrklang/irrKlang.h>
-using namespace irrklang;
-
-

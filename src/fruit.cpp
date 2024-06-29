@@ -1,6 +1,6 @@
-#include"tx_test.hpp"
+#include"../include/fruit.hpp"
 
-Tex::Tex(){
+Fruit::Fruit(){
   //buffers
   glGenVertexArrays(1,&VAO);
   glBindVertexArray(VAO);
@@ -11,6 +11,9 @@ Tex::Tex(){
   //for acces
   glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)0);
   glEnableVertexAttribArray(0);
+  //for normal
+  glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,6*sizeof(float),(void*)(3*sizeof(float)));
+  glEnableVertexAttribArray(1);
   
 }
 
@@ -25,6 +28,10 @@ void Fruit::Update(glm::mat4 look){
 void Fruit::Draw(){
   glUseProgram(ID);
 
+  setVec3("viewPos",camPos.x,camPos.y,camPos.z,ID);
+  setVec3("lightColor",lColor.x,lColor.y,lColor.z,ID);
+  setVec3("color",color.x,color.y,color.z,ID);
+  setVec3("lightPos",lPos.x,lPos.y,lPos.z,ID);
   glm::mat4 projection =  glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
   glm::mat4 view = lookAt;
   setMat4("proj",projection,ID);
