@@ -5,7 +5,7 @@ Text::Text(){
     std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
   }
 
-  if(FT_New_Face(ft,"Fonts/arial.ttf",0,&face)){
+  if(FT_New_Face(ft,"Fonts/boxy.TTF",0,&face)){
     std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl; 
   }
   FT_Set_Pixel_Sizes(face,0,48);
@@ -16,7 +16,7 @@ Text::Text(){
 
   for(unsigned char c=0;c<128;c++){
     //load character glyph
-    if(FT_Load_Char(face,'X',FT_LOAD_RENDER)){
+    if(FT_Load_Char(face,c,FT_LOAD_RENDER)){
       std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
       continue;
     }
@@ -68,9 +68,9 @@ Text::Text(){
 //render text
 
 void Text::RenderText(std::string text,float x,float y,float scale,glm::vec3 color){
-  std::cout<<"Rendering ext"<<std::endl;
+  //std::cout<<"Rendering ext"<<std::endl;
   glUseProgram(ID);
-  glm::mat4 projection =  glm::perspective(glm::radians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f);
+  glm::mat4 projection = glm::ortho(0.0f,1080.0f,0.0f,720.0f);
   setMat4("projection",projection,ID);
   glUniform3f(glGetUniformLocation(ID,"textColor"),color.x,color.y,color.z);
   glActiveTexture(GL_TEXTURE0);

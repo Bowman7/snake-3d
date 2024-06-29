@@ -17,8 +17,8 @@ Grid::Grid(){
   glEnableVertexAttribArray(2);
 
   //init grid
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
+  for(int i=0;i<size;i++){
+    for(int j=0;j<size;j++){
       grid[i][j] = glm::vec3(0.0f,0.0f,0.0f);
     }
   }
@@ -34,8 +34,8 @@ void Grid::Update(glm::mat4 look){
 
 void Grid::InitGrid(){
   glm::vec3 temp = glm::vec3(0.0f,0.0f,0.0f);
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
+  for(int i=0;i<size;i++){
+    for(int j=0;j<size;j++){
       grid[i][j] = temp;
       temp += glm::vec3(1.0f,0.0f,0.0f);
     }
@@ -56,8 +56,8 @@ void Grid::Draw(){
   setMat4("view",view,ID);
 
  
-  for(int i=0;i<10;i++){
-    for(int j=0;j<10;j++){
+  for(int i=0;i<size;i++){
+    for(int j=0;j<size;j++){
        glm::mat4 model = glm::mat4(1.0f);
        model = glm::translate(model,grid[i][j]);
       

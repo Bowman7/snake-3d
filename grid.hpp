@@ -36,6 +36,7 @@ public:
     camPos = pos;
   }
 private:
+  int size = 10;
   glm::vec3 camPos;
   glm::vec3 color = glm::vec3(0.6f,0.8f,0.19f);
   glm::vec3 lColor=glm::vec3(1.0f,1.0f,1.0f);

@@ -94,8 +94,10 @@ public:
   void SetCameraPos(glm::vec3 pos){
     camPos = pos;
   }
+  bool IsEventTriggered(double);
   //directiojn,1-N,2-S,3-E,4-W
 private:
+  float lastUpdatedTime = 0.0f;
   //texture
   unsigned int texture;
   bool crashed = false;

@@ -24,10 +24,10 @@ private:
   unsigned int ID;
   float vertices[30]={
     //vertices                   //tex coord 
-    0.5f, 0.5f, 0.0f,    1.0f, 1.0f, //tr
-    0.5f, -0.5f, 0.0f,   1.0f, 0.0f, //br
-    -0.5f,  -0.5f, 0.0f, 0.0f, 0.0f, //bl
-    -0.5f,  0.5f, 0.0f,  0.0f, 1.0f, //tr
+    1.0f, 1.0f, 0.0f,    1.0f, 1.0f, //tr
+    1.0f, -1.0f, 0.0f,   1.0f, 0.0f, //br
+    -1.0f,  -1.0f, 0.0f, 0.0f, 0.0f, //bl
+    -1.0f,  1.0f, 0.0f,  0.0f, 1.0f, //tr
   };
   unsigned int indices[6]={
     0,1,3,

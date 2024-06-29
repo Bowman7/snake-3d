@@ -39,6 +39,15 @@ Python::~Python(){
 
 }
 
+//if event triggere
+bool Python::IsEventTriggered(double time){
+  float currentTime = glfwGetTime();
+  if(currentTime -lastUpdatedTime >= time){
+    lastUpdatedTime = currentTime;
+    return true;
+  }
+  return false;
+}
 void Python::Update(glm::mat4 look){
   lookAt = look;
 }

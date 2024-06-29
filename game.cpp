@@ -74,6 +74,8 @@ void Game::Reset(){
   python[bodyID].SetDir(7);
  
   bodyID++;
+  finalScore = score;
+  score = 0;
 }
 //init tex
 void Game::InitTexture(){
@@ -122,7 +124,7 @@ void Game::InitTexture(){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   stbi_set_flip_vertically_on_load(true);  
-  data = stbi_load("Graphics/background0.png",&width,&height,&nrChannels,0);
+  data = stbi_load("Graphics/loadingscreen.png",&width,&height,&nrChannels,0);
   if(data){
     glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -140,7 +142,7 @@ void Game::InitTexture(){
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   stbi_set_flip_vertically_on_load(true);  
-  data = stbi_load("Graphics/background-1.png",&width,&height,&nrChannels,0);
+  data = stbi_load("Graphics/oversnake.png",&width,&height,&nrChannels,0);
   if(data){
     glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,width,height,0,GL_RGBA,GL_UNSIGNED_BYTE,data);
     glGenerateMipmap(GL_TEXTURE_2D);
@@ -305,7 +307,9 @@ void Game::CheckCollision(){
     PlayBite();
     AddBody();
     NewFruitPos();
-    speed += 0.01;
+    speed -= 0.01;
+    score +=10;
+   
   }
 }
 //check for self eating in north
@@ -452,47 +456,49 @@ void Game::Update(glm::vec3 camFront,float fv){
     if(python[0].IsCrashed()){
       gameOver = true;
     }
-    //north
-    if(python[0].GetDir() == 6){
-      if(!n_IsEatingSelf()){
-	python[0].SetDir(6);
-	python[0].MoveToDir();
-	for(int i =bodyID-1;i>0;i--){
-	  python[i].MoveToDir();
-	  python[i].SetDir(python[i-1].GetDir());
+    if(gameState){
+      //north
+      if(python[0].GetDir() == 6){
+	if(!n_IsEatingSelf()){
+	  python[0].SetDir(6);
+	  python[0].MoveToDir();
+	  for(int i =bodyID-1;i>0;i--){
+	    python[i].MoveToDir();
+	    python[i].SetDir(python[i-1].GetDir());
+	  }
 	}
       }
-    }
-    //south
-    else if(python[0].GetDir()==7){
-      if(!s_IsEatingSelf()){
-	python[0].SetDir(7);
-	python[0].MoveToDir();
-	for(int i =bodyID-1;i>0;i--){
-	  python[i].MoveToDir();
-	  python[i].SetDir(python[i-1].GetDir());
+      //south
+      else if(python[0].GetDir()==7){
+	if(!s_IsEatingSelf()){
+	  python[0].SetDir(7);
+	  python[0].MoveToDir();
+	  for(int i =bodyID-1;i>0;i--){
+	    python[i].MoveToDir();
+	    python[i].SetDir(python[i-1].GetDir());
+	  }
 	}
       }
-    }
-    //west
-    else if(python[0].GetDir() == 8){
-      if(!w_IsEatingSelf()){
-	python[0].SetDir(8);
-	python[0].MoveToDir();
-	for(int i =bodyID-1;i>0;i--){
-	  python[i].MoveToDir();
-	  python[i].SetDir(python[i-1].GetDir());
+      //west
+      else if(python[0].GetDir() == 8){
+	if(!w_IsEatingSelf()){
+	  python[0].SetDir(8);
+	  python[0].MoveToDir();
+	  for(int i =bodyID-1;i>0;i--){
+	    python[i].MoveToDir();
+	    python[i].SetDir(python[i-1].GetDir());
+	  }
 	}
       }
-    }
-    //east
-    else if(python[0].GetDir() == 9){
-      if(!e_IsEatingSelf()){
-	python[0].SetDir(9);
-	python[0].MoveToDir();
-	for(int i =bodyID-1;i>0;i--){
-	  python[i].MoveToDir();
-	  python[i].SetDir(python[i-1].GetDir());
+      //east
+      else if(python[0].GetDir() == 9){
+	if(!e_IsEatingSelf()){
+	  python[0].SetDir(9);
+	  python[0].MoveToDir();
+	  for(int i =bodyID-1;i>0;i--){
+	    python[i].MoveToDir();
+	    python[i].SetDir(python[i-1].GetDir());
+	  }
 	}
       }
     }
@@ -525,15 +531,21 @@ void Game::Draw(){
   }
   fruit.Draw();
   grid.Draw();
-  text.RenderText("This is sample text", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-  text.RenderText("(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+  std::stringstream ss;
+  ss<<this->score;
+  text.RenderText("Score :"+ss.str(), 10.0f, 10.0f, 0.5f, glm::vec3(1.0f,1.0f, 1.0f));
 }
 //draw loading
 void Game::DrawLoading(){
+  text.RenderText("Press Enter!", 350.0f, 100.0f, 1.0f, glm::vec3(0.21f, 0.27f, 0.08f));
   loading.Draw();
 }
 //draw gameover
 void Game::DrawGameOver(){
+  std::stringstream ss;
+  ss<<this->finalScore;
+  text.RenderText("SCORE : "+ss.str(), 350.0f, 180.0f, 1.0f, glm::vec3(0.21f, 0.27f, 0.08f));
+  text.RenderText("GAME OVER!", 350.0f, 100.0f, 1.0f, glm::vec3(0.21f, 0.27f, 0.08f));
   endLoading.Draw();
 }
 

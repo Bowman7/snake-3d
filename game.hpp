@@ -5,6 +5,7 @@
 
 #include<iostream>
 #include<random>
+#include<string>
 
 #include"glm/glm.hpp"
 #include"glm/gtc/matrix_transform.hpp"
@@ -59,7 +60,15 @@ public:
     soundEngine->play2D(bite,false);
     //soundEngine->stopAllSounds();
   }
+  void SetState(){
+    gameState = true;
+  }
+  void UnsetState(){
+    gameState =false;
+  }
 private:
+  //is in game stat
+  bool gameState = false;
   //fruit eating sound
   ISoundEngine *soundEngine = createIrrKlangDevice();
   const char* bite="Music/bite2.mp3";
@@ -103,5 +112,8 @@ private:
   //for text loading
   Shader textShader;
   Text text;
+  unsigned int score = 0;
+  unsigned int finalScore = 0;
+  
   
 };

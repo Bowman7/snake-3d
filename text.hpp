@@ -29,6 +29,7 @@ public:
 private:
   unsigned int ID;
   unsigned int VAO,VBO;
+  
   FT_Library ft;
   FT_Face face;
 

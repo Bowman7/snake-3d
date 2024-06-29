@@ -194,8 +194,7 @@ int main(){
    
     //handle input
     game.HandleInput(processInput(window));
-    //update
-    game.Update(cameraFront,fov);
+    
     
     switch(state){
     case LOADING:
@@ -206,7 +205,7 @@ int main(){
 	  loading = false;
 	  m_game = true;
 	}
-	glClearColor(0.0f,0.5f,0.5f,1.0f);
+	glClearColor(0.43f,0.54f,0.18f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	game.DrawLoading();
@@ -214,6 +213,10 @@ int main(){
       break;
     case GAME:
       {
+	game.SetState();
+	//update
+	game.Update(cameraFront,fov);
+	
 	if(m_game){
 	  music.Stop();
 	  music.PlayGame();
@@ -236,13 +239,14 @@ int main(){
       }break;
     case GAMEOVER:
       {
+	game.UnsetState();
 	if(m_gameover){
 	  music.Stop();
 	  music.PlayOver();
 	  m_gameover =false;
 	  loading = true;
 	}
-	glClearColor(0.0f,0.5f,0.5f,1.0f);
+	glClearColor(0.43f,0.54f,0.18f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	game.DrawGameOver();
